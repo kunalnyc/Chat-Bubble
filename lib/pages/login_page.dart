@@ -42,43 +42,64 @@ class LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Center(
-            child: TextButton(
-              onPressed: () async {
-                authProvider.handleSignIn().then((isSuccess) {
-                  if (isSuccess) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(),
-                      ),
-                    );
-                  }
-                }).catchError((error, stackTrace) {
-                  Fluttertoast.showToast(msg: error.toString());
-                  authProvider.handleException();
-                });
-              },
-              child: Text(
-                'Sign in with Google',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed)) return Color(0xffdd4b39).withOpacity(0.8);
-                    return Color(0xffdd4b39);
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Bubble Chat',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextButton(
+                  onPressed: () async {
+                    authProvider.handleSignIn().then((isSuccess) {
+                      if (isSuccess) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ),
+                        );
+                      }
+                    }).catchError((error, stackTrace) {
+                      Fluttertoast.showToast(msg: error.toString());
+                      authProvider.handleException();
+                    });
                   },
+                  child: Text(
+                    'Sign in with Google',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Color(0xffdd4b39).withOpacity(0.8);
+                        return Color(0xffdd4b39);
+                      },
+                    ),
+                    splashFactory: NoSplash.splashFactory,
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.fromLTRB(30, 15, 30, 15),
+                    ),
+                  ),
                 ),
-                splashFactory: NoSplash.splashFactory,
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.fromLTRB(30, 15, 30, 15),
-                ),
-              ),
+              ],
             ),
           ),
           // Loading
           Positioned(
-            child: authProvider.status == Status.authenticating ? LoadingView() : SizedBox.shrink(),
+            child: authProvider.status == Status.authenticating
+                ? LoadingView()
+                : SizedBox.shrink(),
           ),
         ],
       ),
